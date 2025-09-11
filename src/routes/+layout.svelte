@@ -15,4 +15,13 @@
 	</a>
 </nav>
 
-{@render children?.()}
+<div class="container">
+	{@render children?.()}
+</div>
+
+<style lang="css">
+	.container {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+</style>

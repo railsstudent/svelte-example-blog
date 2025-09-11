@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import PostCard from '$lib/components/post-card.svelte';
-	import { resolve } from '$app/paths';
 
 	const { data }: PageProps = $props();
 	const { posts } = data;

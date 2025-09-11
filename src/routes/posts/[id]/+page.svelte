@@ -3,10 +3,7 @@
 
     const { data }: PageProps = $props();
     const { post } = data;
-
-    console.log('post', post);
 </script>
-
 
 <div class="mb-10">
     <h1 class="text-3xl">{ post.title }</h1>
