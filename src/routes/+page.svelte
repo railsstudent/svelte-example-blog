@@ -1,2 +1,14 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import type { PageProps } from './$types';
+	import PostCard from '$lib/components/post-card.svelte';
+	import { resolve } from '$app/paths';
+
+	const { data }: PageProps = $props();
+	const { posts } = data;
+</script>
+
+<div class="flex flex-grow flex-wrap">
+	{#each posts as post (post.id)}
+		<PostCard {post} />
+	{/each}
+</div>
