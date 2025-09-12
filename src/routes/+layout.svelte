@@ -11,7 +11,7 @@
 
 <nav class="mb-10 bg-green-400 p-5 text-white">
 	<a href="/">
-		<span class="text-2xl">Snazzy Fake Blog</span>
+		<span class="text-2xl">Snazzy Fake Blog (Svelte 5 ver.)</span>
 	</a>
 </nav>
 
