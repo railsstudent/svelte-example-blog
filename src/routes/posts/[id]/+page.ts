@@ -7,24 +7,22 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, fetch }): Promise<PostWitUser> => {
 	console.log('params', params);
 
-	const post = await fetch(`${BASE_URL}/posts/${params.id}`)
-		.then((response) => response.json() as Promise<Post>)
-		.catch((error) => {
-			console.error('Error fetching posts:', error);
-			return undefined;
-		});
+	try {
+		const response = await fetch(`${BASE_URL}/posts/${params.id}`);
+		const post = (await response.json()) as Post;
 
-	const user = post
-		? await fetch(`${BASE_URL}/users/${post?.userId}`)
-				.then((response) => response.json() as Promise<User>)
-				.catch((error) => {
-					console.error('Error fetching posts:', error);
-					return undefined;
-				})
-		: undefined;
+		const userResponse = post ? await fetch(`${BASE_URL}/users/${post?.userId}`) : undefined;
+		const user = userResponse ? ((await userResponse.json()) as User) : undefined;
 
-	return {
-		post,
-		user
-	};
+		return {
+			post,
+			user
+		};
+	} catch (error) {
+		console.error('Error fetching a post:', error);
+		return {
+			post: undefined,
+			user: undefined
+		};
+	}
 };
