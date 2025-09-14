@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 </script>
@@ -15,9 +16,15 @@
 	</a>
 </nav>
 
-<div class="container">
-	{@render children?.()}
-</div>
+{#if !page.data}
+	<div>Loading...</div>
+{:else if page.error}
+	{page.error.message}
+{:else}
+	<div class="container">
+		{@render children?.()}
+	</div>
+{/if}
 
 <style lang="css">
 	.container {

@@ -1,18 +1,18 @@
-import type { PageServerLoad } from './$types';
 import { BASE_URL } from '$lib/constants/posts.const';
 import type { Post } from '$lib/types/post';
-import type { RequestHandler } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 // retreive all posts
-export const load: PageServerLoad = async ({ fetch }: RequestHandler) => {
-	const posts = await fetch(`${BASE_URL}/posts`)
-		.then((response) => response.json() as Promise<Post[]>)
-		.catch((error) => {
-			console.error('Error fetching posts:', error);
-			return [] as Post[];
-		});
+export const load: PageServerLoad = async ({ fetch }) => {
+	const postResponse = await fetch(`${BASE_URL}/posts`);
 
-	return {
-		posts
-	};
+	if (!postResponse.ok) {
+		error(404, {
+			message: 'Failed to fetch posts'
+		});
+	}
+
+	const posts = (await postResponse.json()) as Post[];
+	return { posts };
 };
