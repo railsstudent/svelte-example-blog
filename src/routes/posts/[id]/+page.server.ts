@@ -1,5 +1,6 @@
 import { BASE_URL } from '$lib/constants/posts.const';
-import type { PostWitUser } from '$lib/types/user';
+import type { Post } from '$lib/types/post';
+import type { PostWitUser, User } from '$lib/types/user';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -7,31 +8,34 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params, fetch }): Promise<PostWitUser> => {
 	console.log('params', params);
 
-	const post = await retrieveResource(fetch, `posts/${+params.id}`, 'Post');
-	const user = await retrieveResource(fetch, `users/${post.userId}`, 'User');
+	const post = (await retrieveResource(fetch, `posts/${+params.id}`, 'Post')) as Post;
+	const user = (await retrieveResource(fetch, `users/${post.userId}`, 'User')) as User;
 
 	return {
 		post,
-		user
+		user,
 	};
 };
 
 type FetchFunction = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
-async function retrieveResource(fetch: FetchFunction, subPath: string, item: string) {
+async function retrieveResource(fetch: FetchFunction, subPath: string, itemName: string) {
 	const url = `${BASE_URL}/${subPath}`;
 	const response = await fetch(url);
 	if (!response.ok) {
 		error(404, {
-			message: `Failed to fetch ${item}`
+			message: `Failed to fetch ${itemName}`
 		});
 	}
-	const post = await response.json();
+	const item = await response.json();
 
-	if (!post) {
+	if (!item) {
 		error(404, {
-			message: `${item} does not exist`
+			message: `${itemName} does not exist`
 		});
 	}
-	return post;
+
+	return new Promise((resolve) => {
+		setTimeout(() => resolve(item), 1000);
+	});
 }
